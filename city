@@ -1,0 +1,43 @@
+function tspBruteForce(dist)
+    n = size(dist, 1);
+    minDist = %inf;
+    bestTour = [];
+    
+    function permute(tour, visited)
+        if length(tour) == n then
+            tour = [tour, tour(1)];
+            distSum = 0;
+            for i = 1:n
+                distSum = distSum + dist(tour(i), tour(i+1));
+            end
+            if distSum < minDist then
+                minDist = distSum;
+                bestTour = tour;
+            end
+            return;
+        end
+        for i = 1:n
+            if ~visited(i) then
+                visited(i) = 1;
+                permute([tour, i], visited);
+                visited(i) = 0;
+            end
+        end
+    endfunction
+
+    visited = zeros(1, n);
+    visited(1) = 1;
+    permute([1], visited);
+    
+    disp("Shortest tour: ");
+    disp(bestTour);
+    disp("Minimum tour length: ");
+    disp(minDist);
+endfunction
+
+dist = [0 10 15 20 25; 
+        10 0 35 25 30; 
+        15 35 0 30 5; 
+        20 25 30 0 15; 
+        25 30 5 15 0];
+tspBruteForce(dist);
